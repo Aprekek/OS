@@ -64,7 +64,7 @@ do
     "-g")
         shift
         printf "$(ip route delete default)"
-        printf "$(ip add route defult via $1)"
+        printf "$(ip route add defult via $1)"
         ;;
     "-dl")
         shift # переход к IP адрессу порта
