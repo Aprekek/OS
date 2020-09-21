@@ -1,52 +1,5 @@
 #!/bin/bash
 
-function networkInterfaces(){
-    total=0
-    echo -e "\nСетевые интерфейсы: "
-    for i in $(ifconfig -a)
-    do
-        if [ ${i:${#i}-1} == ":" ] 
-        then
-            if [ $total != 0 ]
-            then
-                printf "\n\n$total) $i "
-            else
-                printf "$total) $i "
-            fi
-            let total+=1
-            findNICState $i
-        else
-            case $i in
-            "RX" | "TX" | "inet" | "inet6" | "ether" | "loop" | "device" | "flags"*)
-                printf "\n\t"$i" "
-                ;;
-            *)
-                printf $i" "
-                ;;
-            esac
-        fi
-    done
-    printf "\n"
-}
-
-function findNICState(){
-    isNextWordState=0
-    for word in $(ip a | grep "$1")
-    do
-        if [ $word == "state" ]
-        then
-            printf "$word "
-            let isNextWordState=1
-        else 
-            if [ $isNextWordState == 1 ]
-            then
-                printf $word
-                break
-            fi
-        fi
-    done
-}
-
 function switchOffNICViaIP(){
     NIC="$(ifconfig -a | grep -B3 "192.168.0.59" | grep ":" | cut -f 1 -d ':')"
     printf "$(ip link set $NIC down)"
@@ -94,7 +47,7 @@ do
         fi
         ;;
     "-n" | "--nic")
-        networkInterfaces
+        echo "$(ifconfig -a)"
         ;;
     "-ip")
         shift
@@ -110,6 +63,7 @@ do
         ;;
     "-g")
         shift
+        printf "$(ip route delete default)"
         printf "$(ip add route defult via $1)"
         ;;
     "-dl")
