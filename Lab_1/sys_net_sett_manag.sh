@@ -57,8 +57,8 @@ function about(){
    echo "Аргументы:"
    echo -e "\t2)--nic|-n - вывести информацию о сетевых интерфейсах"
    echo -e "\t  Пример: ./sys_net_sett_manag -n"
-   echo -e "\t1)<NIC> [up|down] - включить/отключить сетевой(ые) интерфейс(ы)"
-   echo -e "\t  Пример: ./sys_net_sett_manag wlp5s0 up ; или, если несколько ./sys_net_sett_manag wlp5s0 up enp3s0 down"
+   echo -e "\t1)<up|down> <NIC> - включить/отключить сетевой(ые) интерфейс(ы)"
+   echo -e "\t  Пример: ./sys_net_sett_manag wlp5s0 up ; или, если несколько ./sys_net_sett_manag up wlp5s0 down enp3s0"
    echo -e "\t3)-ip <NIC> <x.x.x.x> - установка IP адресса для сетевого интерфейса"
    echo -e "\t  Пример: ./sys_net_sett_manag -ip wlp5s0 192.169.0.202"
    echo -e "\t4)-m <NIC> <x.x.x.x> - установка netmask для сетевого интерфейса"
@@ -84,12 +84,13 @@ do
         about
         ;;
     "up" | "down")
-        NIC=$param # Имя сетевого интерфейса
-        if [ -n "$(ifconfig -a | grep "$NIC: ")" ]
+        ACTION=$1 # up|down
+        shift
+        if [ -n "$(ifconfig -a | grep "$1: ")" ]
         then
-            printf "$(ifconfig $NIC $1)"
+            printf "$(ip link set $1 $ACTION)"
         else
-            echo -en "\033[31m \nСетевого интерфейса $NIC не существует \033[0m"
+            echo -en "\033[31m \nСетевого интерфейса $1 не существует \033[0m"
         fi
         ;;
     "-n" | "--nic")
@@ -107,6 +108,10 @@ do
         shift # Переходим к netmask
         printf "$(ifconfig $NIC netmask $1)"
         ;;
+    "-g")
+        shift
+        printf "$(ip add route defult via $1)"
+        ;;
     "-dl")
         shift # переход к IP адрессу порта
         switchOffNICViaIP $1
@@ -119,6 +124,5 @@ do
         echo "Неверная команда \"$1\""
     esac
 
-    param="$1"
     shift
 done
