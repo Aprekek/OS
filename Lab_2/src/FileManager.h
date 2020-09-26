@@ -4,8 +4,10 @@
 #include <iostream>
 #include <experimental/filesystem>
 #include <dirent.h>
+#include <sys/stat.h>
+#include <string.h>
 
-namespace fs = std::experimental::filesystem;
+    namespace fs = std::experimental::filesystem;
 
 class FileManager
 {
@@ -15,6 +17,7 @@ public:
     static int removeFile(const char *fileName);
     static int copyFile(fs::path fileToCopy, fs::path destination);
     static int showContent(const char *dirName);
+    static unsigned long size(std::string fileName);
 };
 
 #endif

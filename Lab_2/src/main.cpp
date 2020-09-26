@@ -1,14 +1,19 @@
 #include <iostream>
 #include "FileManager.h"
-#include <string.h>
 
 const char *MOVE_FILE = "-mv";
 const char *DELETE_FLAG = "-dl";
 const char *COPY_FLAG = "-cp";
 const char *LS_FLAG = "-ls";
+const char *SZ_FLAG = "-sz";
 
 int main(int argc, char **argv)
 {
+    // struct stat buf;
+    // if (stat(argv[1], &buf) == 0)
+    //     std::cout << buf.st_mode << std::endl;
+    // S_ISDIR
+
     if (argc < 2)
     {
         std::cout << "Ошибка! Слишком мало аргументов -h для помощи\n";
@@ -80,6 +85,24 @@ int main(int argc, char **argv)
             else
             {
                 FileManager::showContent(argv[i + 1]);
+                ++i;
+            }
+            continue;
+        }
+        if (strcmp(flag, SZ_FLAG) == 0)
+        {
+            if (argc < i + 1)
+                std::cout << "Ошибка! Недостаточно аргументов для флага " << SZ_FLAG << std::endl;
+            else
+            {
+                try
+                {
+                    std::cout << FileManager::size(argv[i + 1]) << " byte\n";
+                }
+                catch (std::string error)
+                {
+                    std::cout << error << std::endl;
+                }
                 ++i;
             }
             continue;

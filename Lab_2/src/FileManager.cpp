@@ -43,3 +43,39 @@ int FileManager::showContent(const char *dirName)
     closedir(dir);
     return 0;
 }
+
+unsigned long FileManager::size(std::string fileName)
+{
+    unsigned long contentSize = 0;
+
+    struct stat fileInfo;
+    if (stat(fileName.c_str(), &fileInfo) != 0)
+    {
+        std::string error = "Cannot get info about file \"" + fileName + "\"";
+        throw error;
+    }
+    if (S_ISDIR(fileInfo.st_mode))
+    {
+        DIR *dir = opendir(fileName.c_str());
+        if (dir == nullptr)
+        {
+            std::string error = "Cannot open dir \"" + fileName + "\"";
+            throw error;
+        }
+
+        dirent *contentInfo;
+        while ((contentInfo = readdir(dir)) != nullptr)
+        {
+            if ((strcmp(contentInfo->d_name, ".") != 0) && (strcmp(contentInfo->d_name, "..") != 0))
+            {
+                std::string pathToNestedFile = fileName + "/" + contentInfo->d_name;
+                contentSize += size(pathToNestedFile);
+            }
+        }
+        return contentSize;
+    }
+    else
+    {
+        return fileInfo.st_size;
+    }
+}
