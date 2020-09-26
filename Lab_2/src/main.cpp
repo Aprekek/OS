@@ -5,6 +5,7 @@
 const char *MOVE_FILE = "-mv";
 const char *DELETE_FLAG = "-dl";
 const char *COPY_FLAG = "-cp";
+const char *LS_FLAG = "-ls";
 
 int main(int argc, char **argv)
 {
@@ -69,6 +70,17 @@ int main(int argc, char **argv)
                     std::cout << "Ошибка! Неудалось скопировать файл\n";
                 };
                 i += 2;
+            }
+            continue;
+        }
+        if (strcmp(flag, LS_FLAG) == 0)
+        {
+            if (argc < i + 1)
+                std::cout << "Ошибка! Недостаточно аргументов для флага " << LS_FLAG << std::endl;
+            else
+            {
+                FileManager::showContent(argv[i + 1]);
+                ++i;
             }
             continue;
         }
