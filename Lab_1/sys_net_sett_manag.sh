@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function switchOffNICViaIP(){
-    NIC="$(ifconfig -a | grep -B3 "192.168.0.59" | grep ":" | cut -f 1 -d ':')"
+    NIC="$(ifconfig -a | grep -B3 "$1" | grep ":" | cut -f 1 -d ':')"
     printf "$(ip link set $NIC down)"
 }
 
