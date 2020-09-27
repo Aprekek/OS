@@ -6,11 +6,18 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <fstream>
+#include <pwd.h>
+#include <sys/types.h>
+#include <iomanip>
 
-    namespace fs = std::experimental::filesystem;
+namespace fs = std::experimental::filesystem;
 
 class FileManager
 {
+private:
+    static char *getContent(char *str);
+    static std::string getPidInfo(std::ifstream &file, const int &offset);
 
 public:
     static int replaceFile(const char *oldName, const char *newName);
@@ -18,6 +25,7 @@ public:
     static int copyFile(fs::path fileToCopy, fs::path destination);
     static int showContent(const char *dirName);
     static unsigned long size(std::string fileName);
+    static int showProcfsProcesses();
 };
 
 #endif

@@ -6,24 +6,22 @@ const char *DELETE_FLAG = "-dl";
 const char *COPY_FLAG = "-cp";
 const char *LS_FLAG = "-ls";
 const char *SZ_FLAG = "-sz";
+const char *PROC_FLAG = "-pinf";
 
 int main(int argc, char **argv)
 {
-    // struct stat buf;
-    // if (stat(argv[1], &buf) == 0)
-    //     std::cout << buf.st_mode << std::endl;
-    // S_ISDIR
-
-    if (argc < 2)
-    {
-        std::cout << "Ошибка! Слишком мало аргументов -h для помощи\n";
-        return -1;
-    }
+    // if (argc < 2)
+    // {
+    //     std::cout << "Ошибка! Слишком мало аргументов -h для помощи\n";
+    //     return -1;
+    // }
 
     char *flag = nullptr;
-    for (int i = 1; i < argc; i++)
+    // for (int i = 2; i < argc; i++)
+     for (int i = 1; i < argc; i++)
     {
-        flag = argv[i];
+        // flag = argv[i];
+        flag = "-pinf";
         if (strcmp(flag, MOVE_FILE) == 0)
         {
             if (argc < i + 2) // 2 означает, что присутствуют стрый путь и новый
@@ -104,6 +102,18 @@ int main(int argc, char **argv)
                     std::cout << error << std::endl;
                 }
                 ++i;
+            }
+            continue;
+        }
+        if (strcmp(flag, PROC_FLAG) == 0)
+        {
+            try
+            {
+                FileManager::showProcfsProcesses();
+            }
+            catch (std::string error)
+            {
+                std::cout << error << std::endl;
             }
             continue;
         }
