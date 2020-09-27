@@ -1,7 +1,7 @@
-#include <iostream>
 #include "FileManager.h"
 
-const char *MOVE_FILE = "-mv";
+const char *HELP_FLAG = "-h";
+const char *MOVE_FLAG = "-mv";
 const char *DELETE_FLAG = "-dl";
 const char *COPY_FLAG = "-cp";
 const char *LS_FLAG = "-ls";
@@ -10,22 +10,38 @@ const char *PROC_FLAG = "-pinf";
 
 int main(int argc, char **argv)
 {
-    // if (argc < 2)
-    // {
-    //     std::cout << "Ошибка! Слишком мало аргументов -h для помощи\n";
-    //     return -1;
-    // }
+    if (argc < 2)
+    {
+        std::cout << "Ошибка! Слишком мало аргументов -h для помощи\n";
+        return -1;
+    }
 
     char *flag = nullptr;
-    // for (int i = 2; i < argc; i++)
-     for (int i = 1; i < argc; i++)
+    for (int i = 1; i < argc; i++)
     {
-        // flag = argv[i];
-        flag = "-pinf";
-        if (strcmp(flag, MOVE_FILE) == 0)
+        flag = argv[i];
+        if (strcmp(flag, HELP_FLAG) == 0)
+        {
+            std::cout << "Авторы (ИС-841): Шамбуров Михаил\n"
+                      << "Аргументы:\n"
+                      << "1) -mv <oldName> <newName> - перемещает файл из oldName в newName\n"
+                      << "Пример: ./file_manager -mv code.cpp src/code.cpp\n"
+                      << "2) -dl <fileName> - удаляет файл fileName\n"
+                      << "Пример: ./file_manager -dl src/code.cpp\n"
+                      << "3) -cp <fileName> <destionation> - копирует файл fileName в destionation\n"
+                      << "Пример: ./file_manager -cp src/code.cpp ../code.cpp\n"
+                      << "4) -ls <fileName> - показывает содержимое каталога fileName\n"
+                      << "Пример: ./file_manager -ls src/\n"
+                      << "3) -sz <fileName> - показывае размер файла или каталога fileName\n"
+                      << "Пример: ./file_manager -sz src/\n"
+                      << "3) -pinf - показывает информацию о процессах из procfs\n"
+                      << "Пример: ./file_manager -pinf\n";
+            continue;
+        }
+        if (strcmp(flag, MOVE_FLAG) == 0)
         {
             if (argc < i + 2) // 2 означает, что присутствуют стрый путь и новый
-                std::cout << "Ошибка! Недостаточно аргументов для флага " << MOVE_FILE << std::endl;
+                std::cout << "Ошибка! Недостаточно аргументов для флага " << MOVE_FLAG << std::endl;
             else
             {
                 if (FileManager::replaceFile(argv[i + 1], argv[i + 2]) == 0)
