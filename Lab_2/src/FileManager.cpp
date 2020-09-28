@@ -38,7 +38,8 @@ int FileManager::showContent(const char *dirName)
     std::cout << "Содержимое каталога " << dirName << ":\n";
     while ((contentInfo = readdir(dir)) != nullptr)
     {
-        std::cout << contentInfo->d_name << std::endl;
+        if (strcmp(contentInfo->d_name, ".") != 0 && strcmp(contentInfo->d_name, "..") != 0)
+            std::cout << contentInfo->d_name << std::endl;
     }
     closedir(dir);
     return 0;
