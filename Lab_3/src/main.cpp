@@ -3,6 +3,7 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <string.h>
+#include <vector>
 
 using namespace std;
 
@@ -10,7 +11,8 @@ const char *HELP_FL = "-h";
 const char *EXECUTE_FL = "-exe";
 
 void showInfo();
-int executeProgramm();
+int executeProgramm(char *argv[]);
+char **getArgumentForChildProgramm(char *progName, const string &agruments);
 
 int main(int argc, char *argv[])
 {
@@ -23,7 +25,12 @@ int main(int argc, char *argv[])
             showInfo();
         else if (strcmp(argv[1], EXECUTE_FL) == 0)
         {
-            executeProgramm();
+            if (argc < 3)
+            {
+                cout << "Слишком мало аргументов для " << EXECUTE_FL << "; -h за помощью\n";
+                return -1;
+            }
+            executeProgramm(argv);
         }
         else
         {
@@ -41,7 +48,61 @@ void showInfo()
     cout << "Пример: ./LiteSH -exe ../bin/file_manager\n";
 }
 
-int executeProgramm()
+int executeProgramm(char *argv[])
 {
+    string arguments;
+    int pid;
 
+    while (1)
+    {
+        cout << "\n\nqwt - для выхода\nВведите аргументы для программы: ";
+        getline(cin, arguments);
+
+        if (strstr(arguments.c_str(), "qwt") != nullptr)
+            return 0;
+
+        switch ((pid = fork()))
+        {
+        case -1:
+        {
+            perror("fork");
+            break;
+        }
+        case 0:
+        {
+            if (execv(argv[2], getArgumentForChildProgramm(argv[2], arguments)) == -1)
+                perror("execvp");
+        }
+        default:
+            wait(nullptr);
+        }
+    }
+    return 0;
+}
+
+char **getArgumentForChildProgramm(char *progName, const string &agruments)
+{
+    vector<string> argvVector;
+    size_t curPosition = 0;
+    size_t spacePosition;
+    string substr;
+
+    argvVector.push_back(progName);
+    do
+    {
+        spacePosition = agruments.find(' ', curPosition);
+        substr = agruments.substr(curPosition, spacePosition - curPosition);
+        if (!substr.empty())
+            argvVector.push_back(substr);
+        curPosition = spacePosition + 1;
+    } while (spacePosition != string::npos);
+
+    char **argv = new char *[argvVector.size() + 1];
+    for (size_t i = 0; i < argvVector.size(); ++i)
+    {
+        argv[i] = new char[argvVector[i].size() + 1];
+        strcpy(argv[i], argvVector[i].c_str());
+    }
+    argv[argvVector.size()] = 0;
+    return argv;
 }
