@@ -7,7 +7,6 @@ const char *LS_FLAG = "-ls";
 const char *SZ_FLAG = "-sz";
 const char *PROC_FLAG = "-pinf";
 
-
 int FileManager::replaceFile(const char *oldName, const char *newName)
 {
     return rename(oldName, newName);
@@ -165,7 +164,7 @@ std::string FileManager::getPidInfo(std::ifstream &file, const int &offset)
 
 int executeRequest(int argc, char *argv[])
 {
- if (argc < 2)
+    if (argc < 2)
     {
         std::cout << "Ошибка! Слишком мало аргументов -h для помощи\n";
         return -1;

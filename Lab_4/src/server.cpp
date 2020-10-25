@@ -16,7 +16,7 @@
 
 using namespace std;
 
-#define MAX_LEN 1024
+#define MAX_LEN 1024 * 1024
 #define COMMAND_LEN 512
 #define EXIT "exit"
 #define INFO "info.txt"
@@ -154,10 +154,8 @@ void *connectionHandler(void *_data)
 
         dup2(infoFD, STDOUT_FILENO);
 
-        
-            argv = getArgumentForChildProgramm(path, command, argc);
-            executeRequest(argc, argv);
-        
+        argv = getArgumentForChildProgramm(path, command, argc);
+        executeRequest(argc, argv);
 
         fflush(nullptr);
         close(infoFD);
@@ -185,6 +183,10 @@ void *connectionHandler(void *_data)
         close(infoFD);
 
         send(newSocketFD, respBuff.c_str(), respBuff.length(), 0);
+
+        fflush(nullptr);
+
+        dup2(0, STDOUT_FILENO);
 
         // pthread_t thrId;
         // exeData = new executeData;

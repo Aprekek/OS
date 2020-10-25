@@ -10,7 +10,7 @@
 #include <arpa/inet.h>
 #include <cstdlib>
 
-#define MAX_LEN 1024
+#define MAX_LEN 1024 * 1024
 #define EXIT "exit"
 
 using namespace std;
