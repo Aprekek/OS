@@ -27,6 +27,7 @@ public:
     static unsigned long size(std::string fileName);
     static int showProcfsProcesses();
 };
+
 int executeRequest(int argc, char *argv[]);
 
 #endif
