@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <fcntl.h>
 #include <pthread.h>
+#include "FileManager.h"
 
 using namespace std;
 
@@ -35,7 +36,7 @@ struct handlerData
 int chating(int socketFD, char *pathToProgramm);
 void *connectionHandler(void *_data);
 // void *executeHandler(void *_data);
-char **getArgumentForChildProgramm(char *progName, const string &agruments);
+char **getArgumentForChildProgramm(char *progName, const string &agruments, int &argc);
 
 int main(int argc, char *argv[])
 {
@@ -153,10 +154,10 @@ void *connectionHandler(void *_data)
 
         dup2(infoFD, STDOUT_FILENO);
 
-        /**
+        
             argv = getArgumentForChildProgramm(path, command, argc);
             executeRequest(argc, argv);
-        **/
+        
 
         fflush(nullptr);
         close(infoFD);
