@@ -175,9 +175,8 @@ void *connectionHandler(void *_data)
             break;
         }
 
-        while (!feof(f))
+        while (fgets(tempBuff, MAX_LEN, f))
         {
-            fgets(tempBuff, MAX_LEN, f);
             respBuff += tempBuff;
         }
         close(infoFD);
