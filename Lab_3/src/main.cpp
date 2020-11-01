@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <string.h>
 #include <vector>
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -12,11 +13,11 @@ const char *EXECUTE_FL = "-exe";
 
 void showInfo();
 int executeProgramm(char *argv[]);
+void job(char *argv[], const string &arguments);
 char **getArgumentForChildProgramm(char *progName, const string &agruments);
 
 int main(int argc, char *argv[])
 {
-
     if (argc < 2)
         cout << "Слишком мало аргументов; -h за помощью\n";
     else
@@ -64,20 +65,34 @@ int executeProgramm(char *argv[])
         switch ((pid = fork()))
         {
         case -1:
-        {
             perror("fork");
             break;
-        }
         case 0:
-        {
-            if (execv(argv[2], getArgumentForChildProgramm(argv[2], arguments)) == -1)
-                perror("execvp");
+            job(argv, arguments);
+            exit(EXIT_SUCCESS);
         }
-        default:
-            wait(nullptr);
-        }
+
+        usleep(50000);
     }
+
     return 0;
+}
+
+void job(char *argv[], const string &arguments)
+{
+    umask(0);
+
+    if (setsid() < 0)
+    {
+        perror("setsid");
+        exit(EXIT_FAILURE);
+    }
+
+    if (execv(argv[2], getArgumentForChildProgramm(argv[2], arguments)) == -1)
+    {
+        perror("execvp");
+        exit(EXIT_FAILURE);
+    }
 }
 
 char **getArgumentForChildProgramm(char *progName, const string &agruments)
