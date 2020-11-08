@@ -1,0 +1,11 @@
+[Unit]
+Description=MyServer
+After=syslog.target
+
+[Service]
+Type=forking
+ExecStart=/home/aprekek/Study/5_sem/OS/OS/Lab_4/server 8083 /home/aprekek/Study/5_sem/OS/OS/Lab_4/file_manager
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

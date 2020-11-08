@@ -19,7 +19,7 @@ using namespace std;
 #define MAX_LEN 1024 * 1024
 #define COMMAND_LEN 512
 #define EXIT "exit"
-#define INFO "info.txt"
+#define INFO "/home/aprekek/Study/5_sem/OS/OS/Lab_4/info.txt"
 
 struct handlerData
 {
